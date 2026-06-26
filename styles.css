@@ -1,0 +1,1004 @@
+@font-face {
+  font-family: "FlyFlowerSong";
+  src: url("./assets/fonts/FeiHuaSongTi-2.ttf") format("truetype");
+  font-display: swap;
+}
+
+:root {
+  --bg: #1A1A1A;
+  --stage-width: 1920px;
+  --stage-height: 1080px;
+  --ink: oklch(0.98 0.006 75);
+  --muted: oklch(0.86 0.03 78);
+  --rose: oklch(0.67 0.16 8);
+  --gold: oklch(0.82 0.12 72);
+  --cyan: oklch(0.82 0.11 220);
+  --shadow: oklch(0.08 0.02 260 / 0.42);
+  --font-display: "FlyFlowerSong", "STSong", "SimSun", serif;
+  font-family: var(--font-display);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: var(--stage-width);
+  height: var(--stage-height);
+  min-width: var(--stage-width);
+  min-height: var(--stage-height);
+}
+
+html {
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricprecision;
+}
+
+button {
+  font: inherit;
+}
+
+.experience {
+  position: relative;
+  width: var(--stage-width);
+  height: var(--stage-height);
+  min-width: var(--stage-width);
+  min-height: var(--stage-height);
+  overflow: hidden;
+  color: var(--ink);
+  isolation: isolate;
+  outline: none;
+}
+
+.experience::after {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  content: "";
+  pointer-events: none;
+  background: none;
+}
+
+.phase-morning,
+.phase-night {
+  background: var(--bg);
+}
+
+.atmosphere,
+.falling-layer,
+.poetry-screen {
+  position: absolute;
+  inset: 0;
+}
+
+.atmosphere {
+  z-index: 0;
+  overflow: hidden;
+}
+
+.atmosphere::before,
+.atmosphere::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+}
+
+.atmosphere::before {
+  z-index: 0;
+  background-position: center;
+  background-size: cover;
+  transform: scale(1.04);
+  animation: sceneDrift 24s ease-in-out infinite alternate;
+}
+
+.phase-morning .atmosphere::before {
+  background-color: var(--bg);
+  background-image: url("./assets/starfield-realistic-1a1a1a.png");
+  background-position: center 50%;
+  animation-name: sceneDrift;
+  animation-duration: 28s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+.phase-night .atmosphere::before {
+  background-color: var(--bg);
+  background-image: url("./assets/starfield-realistic-1a1a1a.png");
+  background-position: center 50%;
+  animation-name: sceneDrift;
+  animation-duration: 28s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+.atmosphere::after {
+  z-index: 1;
+  background: transparent;
+}
+
+.phase-morning .atmosphere::after {
+  background: transparent;
+}
+
+.atmosphere > * {
+  position: absolute;
+  z-index: 2;
+}
+
+.sun-radiance {
+  top: -9%;
+  right: 4%;
+  width: 56vw;
+  height: 58vh;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 56% 42%, oklch(1 0.05 85 / 0.88) 0 8%, oklch(0.96 0.13 75 / 0.36) 18%, transparent 48%),
+    radial-gradient(circle at 42% 46%, oklch(1 0.02 98 / 0.32), transparent 52%);
+  filter: blur(20px);
+  opacity: 0;
+  mix-blend-mode: screen;
+  animation: sunBreath 8s ease-in-out infinite alternate;
+}
+
+.phase-morning .sun-radiance,
+.phase-night .sun-radiance {
+  display: none;
+}
+
+.sun-beam {
+  top: -24%;
+  right: 12%;
+  width: 18vw;
+  height: 112vh;
+  transform-origin: 50% 0;
+  background: linear-gradient(180deg, oklch(1 0.05 86 / 0.36), transparent 74%);
+  filter: blur(20px);
+  opacity: 0;
+  mix-blend-mode: screen;
+  clip-path: polygon(40% 0, 60% 0, 100% 100%, 0 100%);
+}
+
+.phase-morning .sun-beam,
+.phase-night .sun-beam {
+  display: none;
+}
+
+.beam-one {
+  transform: rotate(39deg);
+  animation: raySweep 9s ease-in-out infinite alternate;
+}
+
+.beam-two {
+  right: 21%;
+  width: 14vw;
+  transform: rotate(52deg);
+  opacity: 0.34;
+  animation: raySweep 12s ease-in-out 1.6s infinite alternate-reverse;
+}
+
+.beam-three {
+  right: -2%;
+  width: 22vw;
+  transform: rotate(28deg);
+  opacity: 0.26;
+  animation: raySweep 14s ease-in-out 0.8s infinite alternate;
+}
+
+.horizon {
+  position: absolute;
+  inset: auto -10% -18% -10%;
+  height: 44%;
+  background:
+    radial-gradient(ellipse at 50% 18%, oklch(1 0 0 / 0.72), transparent 40%),
+    linear-gradient(180deg, transparent, oklch(0.95 0.06 68 / 0.6));
+  filter: blur(8px);
+  opacity: 0.74;
+  transform: rotate(-2deg);
+}
+
+.phase-morning .horizon,
+.phase-night .horizon {
+  display: none;
+}
+
+.celestial-body {
+  position: absolute;
+  top: 96px;
+  right: 238px;
+  width: 218px;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 35% 34%, oklch(1 0.02 85), oklch(0.93 0.11 74) 40%, transparent 69%),
+    radial-gradient(circle, oklch(0.96 0.1 58 / 0.4), transparent 68%);
+  box-shadow:
+    0 0 80px oklch(0.92 0.12 66 / 0.46),
+    0 0 190px oklch(0.82 0.14 40 / 0.24);
+  filter: blur(7px);
+  opacity: 0.22;
+  mix-blend-mode: screen;
+  animation: breathe 8s ease-in-out infinite;
+}
+
+.phase-night .celestial-body {
+  top: 102px;
+  right: 276px;
+  width: 146px;
+  background:
+    radial-gradient(circle at 42% 36%, oklch(0.96 0.01 270), oklch(0.72 0.03 260) 54%, transparent 70%),
+    radial-gradient(circle, oklch(0.74 0.08 260 / 0.22), transparent 72%);
+  box-shadow:
+    0 0 64px oklch(0.74 0.08 250 / 0.42),
+    0 0 180px oklch(0.42 0.16 282 / 0.24);
+  opacity: 0.18;
+}
+
+.phase-morning .celestial-body,
+.phase-night .celestial-body,
+.phase-morning .cloud,
+.phase-night .cloud {
+  display: none;
+}
+
+.cloud {
+  width: 560px;
+  height: 180px;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 18% 58%, oklch(1 0.02 85 / 0.56), transparent 28%),
+    radial-gradient(circle at 42% 42%, oklch(0.98 0.04 76 / 0.64), transparent 36%),
+    radial-gradient(circle at 70% 56%, oklch(0.91 0.06 260 / 0.36), transparent 34%);
+  filter: blur(20px);
+  opacity: 0.28;
+  animation: cloudDrift 18s ease-in-out infinite alternate;
+  mix-blend-mode: screen;
+}
+
+.cloud-one {
+  left: -140px;
+  top: 184px;
+}
+
+.cloud-two {
+  right: -90px;
+  bottom: 92px;
+  width: 660px;
+  animation-duration: 22s;
+}
+
+.cloud-three {
+  left: 28%;
+  bottom: 15%;
+  width: 430px;
+  opacity: 0.42;
+  animation-duration: 26s;
+}
+
+.phase-night .cloud {
+  background:
+    radial-gradient(circle at 22% 50%, oklch(0.34 0.08 258 / 0.28), transparent 32%),
+    radial-gradient(circle at 48% 48%, oklch(0.46 0.12 276 / 0.2), transparent 42%),
+    radial-gradient(circle at 74% 58%, oklch(0.24 0.08 246 / 0.28), transparent 36%);
+  opacity: 0.2;
+}
+
+.astral-ring {
+  position: absolute;
+  border: 1px solid oklch(1 0 0 / 0.22);
+  border-radius: 999px;
+  opacity: 0.24;
+  transform: rotate(-16deg);
+}
+
+.ring-one {
+  top: 144px;
+  right: 150px;
+  width: 470px;
+  height: 120px;
+  animation: rotateLight 28s linear infinite;
+}
+
+.ring-two {
+  top: 248px;
+  right: 180px;
+  width: 620px;
+  height: 170px;
+  animation: rotateLight 38s linear infinite reverse;
+}
+
+.star-field,
+.particle-field,
+.meteor-field {
+  position: absolute;
+  inset: 0;
+}
+
+.star {
+  position: absolute;
+  border-radius: 999px;
+  background: oklch(0.97 0.02 250);
+  box-shadow: 0 0 14px currentColor;
+  color: oklch(0.92 0.08 244);
+  opacity: 0.16;
+  animation: twinkle 3.4s ease-in-out infinite;
+}
+
+.phase-night .star {
+  opacity: 0.58;
+  animation-name: twinkle, starColorPulse;
+  animation-duration: 4.8s, 10s;
+  animation-timing-function: ease-in-out, ease-in-out;
+  animation-iteration-count: infinite, infinite;
+}
+
+.phase-morning .star {
+  opacity: 0.5;
+  animation-name: twinkle, starColorPulse;
+  animation-duration: 5.2s, 10s;
+  animation-timing-function: ease-in-out, ease-in-out;
+  animation-iteration-count: infinite, infinite;
+}
+
+.particle {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: oklch(1 0 0 / 0.52);
+  box-shadow: 0 0 18px oklch(0.92 0.12 70 / 0.72);
+  animation: floatParticle 9s ease-in-out infinite;
+}
+
+.phase-morning .particle,
+.phase-night .particle {
+  background: oklch(0.88 0.12 226 / 0.54);
+  box-shadow: 0 0 18px oklch(0.72 0.18 282 / 0.58);
+}
+
+.meteor-field {
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.phase-morning .meteor-field,
+.phase-night .meteor-field {
+  opacity: 1;
+}
+
+.meteor {
+  position: absolute;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, oklch(1 0 0 / 0.98), oklch(0.82 0.14 225 / 0.78), transparent);
+  box-shadow:
+    0 0 16px oklch(0.9 0.12 226 / 0.82),
+    0 0 34px oklch(0.72 0.18 278 / 0.42);
+  opacity: 0;
+  transform: rotate(-28deg) translate3d(0, 0, 0);
+  animation: meteorFall 4s cubic-bezier(0.16, 0.84, 0.32, 1) infinite;
+}
+
+.phase-label {
+  position: absolute;
+  right: 76px;
+  bottom: 56px;
+  color: oklch(1 0 0 / 0.34);
+  font-family: var(--font-display);
+  font-size: 86px;
+  font-style: italic;
+  letter-spacing: 0;
+  pointer-events: none;
+}
+
+.welcome {
+  position: relative;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: minmax(430px, 0.9fr) minmax(560px, 1fr);
+  align-items: center;
+  gap: 48px;
+  width: 100%;
+  height: 100%;
+  min-height: var(--stage-height);
+  padding: 76px 84px 58px;
+  transition:
+    opacity 900ms ease,
+    transform 900ms ease,
+    filter 900ms ease;
+}
+
+.state-fall .welcome {
+  opacity: 0.32;
+  filter: blur(3px);
+  transform: scale(1.018);
+  pointer-events: none;
+}
+
+.state-poetry .welcome {
+  opacity: 0;
+  transform: scale(1.05);
+  pointer-events: none;
+}
+
+.time-chip {
+  position: absolute;
+  top: 46px;
+  left: 76px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid oklch(1 0 0 / 0.32);
+  border-radius: 999px;
+  background: oklch(1 0 0 / 0.12);
+  color: oklch(1 0 0 / 0.86);
+  box-shadow: 0 18px 46px var(--shadow);
+  backdrop-filter: blur(18px);
+}
+
+.time-chip svg {
+  width: 19px;
+  height: 19px;
+}
+
+.greeting-block {
+  max-width: 560px;
+  margin-top: 24px;
+}
+
+.overline {
+  margin: 0 0 14px;
+  color: oklch(1 0 0 / 0.68);
+  font-size: 15px;
+  letter-spacing: 0.03em;
+}
+
+.greeting-block h1 {
+  margin: 0;
+  color: oklch(1 0 0 / 0.96);
+  font-size: 120px;
+  font-weight: 750;
+  line-height: 0.95;
+  letter-spacing: 0;
+  text-shadow: 0 24px 72px oklch(0 0 0 / 0.28);
+}
+
+.english-greeting {
+  margin: 22px 0 0;
+  color: oklch(1 0 0 / 0.78);
+  font-family: var(--font-display);
+  font-size: 31px;
+  font-style: italic;
+}
+
+.mood-composer {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  justify-items: start;
+  min-height: 590px;
+  padding-top: 26px;
+}
+
+.mood-intro {
+  width: min(510px, 100%);
+  margin-bottom: 24px;
+}
+
+.mood-intro h2 {
+  max-width: 470px;
+  margin: 0;
+  color: oklch(1 0 0 / 0.95);
+  font-size: 34px;
+  font-weight: 650;
+  line-height: 1.22;
+  letter-spacing: 0;
+}
+
+.mood-intro p:last-child {
+  max-width: 500px;
+  margin: 14px 0 0;
+  color: oklch(1 0 0 / 0.68);
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.mood-wheel {
+  position: relative;
+  width: 570px;
+  height: 420px;
+}
+
+.mood-wheel::before {
+  position: absolute;
+  top: 30px;
+  bottom: 30px;
+  left: 42px;
+  width: 1px;
+  content: "";
+  background: linear-gradient(180deg, transparent, oklch(1 0 0 / 0.54), transparent);
+}
+
+.mood-orb {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  --item-soft: color-mix(in oklch, var(--item-color) 26%, transparent);
+  --item-line: color-mix(in oklch, var(--item-color) 54%, white 46%);
+  --item-glow: color-mix(in oklch, var(--item-color) 36%, transparent);
+  display: grid;
+  grid-template-columns: 72px 158px 1fr;
+  align-items: center;
+  width: 548px;
+  min-height: 74px;
+  padding: 10px 18px 10px 6px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: oklch(1 0 0 / 0.68);
+  cursor: pointer;
+  opacity: clamp(0.26, calc(1 - var(--abs-offset) * 0.22), 1);
+  transform:
+    translateY(calc(-50% + var(--offset) * 78px))
+    translateX(calc(var(--abs-offset) * -14px))
+    scale(clamp(0.9, calc(1 - var(--abs-offset) * 0.055), 1));
+  transition:
+    color 220ms ease,
+    opacity 220ms ease,
+    transform 220ms ease,
+    background 220ms ease;
+}
+
+.mood-orb:hover,
+.mood-orb:focus-visible {
+  background:
+    linear-gradient(90deg, var(--item-soft), transparent 76%),
+    oklch(1 0 0 / 0.06);
+  color: oklch(1 0 0 / 0.94);
+  outline: 2px solid var(--item-line);
+  outline-offset: 4px;
+  box-shadow: 0 0 22px var(--item-glow);
+}
+
+.mood-orb.is-selected {
+  color: oklch(1 0 0 / 0.98);
+  outline: 2px solid var(--item-line);
+  outline-offset: 4px;
+  background:
+    linear-gradient(90deg, var(--item-soft), oklch(1 0 0 / 0.06) 48%, transparent 100%),
+    radial-gradient(circle at 36px 50%, var(--item-soft), transparent 62%);
+  box-shadow:
+    0 18px 48px oklch(0 0 0 / 0.16),
+    0 0 24px var(--item-glow),
+    inset 0 0 0 1px var(--item-line);
+}
+
+.mood-icon-wrap {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--item-color);
+  box-shadow: 0 0 16px oklch(0 0 0 / 0);
+  transition: box-shadow 0.22s ease, transform 0.22s ease;
+}
+
+.mood-orb.is-selected .mood-icon-wrap,
+.mood-orb:hover .mood-icon-wrap,
+.mood-orb:focus-visible .mood-icon-wrap {
+  transform: scale(1.04);
+  box-shadow:
+    0 0 18px var(--item-glow),
+    0 0 32px color-mix(in oklch, var(--item-color) 28%, transparent);
+}
+
+.mood-icon-image {
+  display: block;
+  width: 31px;
+  height: 31px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 10px oklch(0 0 0 / 0.18));
+}
+
+.mood-label {
+  font-size: 20px;
+  font-weight: 650;
+}
+
+.mood-whisper {
+  color: oklch(1 0 0 / 0.58);
+  font-size: 14px;
+}
+
+.again-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms ease;
+}
+
+.again-button:hover {
+  transform: translateY(-2px);
+}
+
+.again-button:focus-visible {
+  outline: 3px solid oklch(1 0 0 / 0.62);
+  outline-offset: 5px;
+}
+
+.care-note {
+  position: absolute;
+  left: 84px;
+  bottom: 46px;
+  max-width: 480px;
+  margin: 0;
+  color: oklch(1 0 0 / 0.58);
+  font-size: 14px;
+}
+
+.falling-layer {
+  z-index: 7;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+
+.falling-layer.is-active {
+  opacity: 1;
+}
+
+.falling-icon {
+  position: absolute;
+  top: -80px;
+  color: var(--mood-color);
+  opacity: 0;
+  filter: drop-shadow(0 0 18px var(--mood-color));
+  animation-name: iconFall;
+  animation-timing-function: cubic-bezier(0.16, 0.78, 0.22, 1);
+  animation-fill-mode: forwards;
+}
+
+.falling-icon-image {
+  display: block;
+  object-fit: contain;
+  color: unset;
+}
+
+.poetry-screen {
+  z-index: 8;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 76px 96px;
+  background:
+    radial-gradient(circle at 50% 52%, var(--mood-color), transparent 0.6px),
+    radial-gradient(circle at 70% 22%, oklch(0.42 0.14 276 / 0.16), transparent 36%),
+    radial-gradient(circle at 22% 76%, oklch(0.45 0.18 22 / 0.13), transparent 31%),
+    oklch(0.015 0 0);
+  background-size: 34px 34px, auto, auto, auto;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(1.035);
+  transition:
+    opacity 1100ms ease,
+    transform 1600ms ease;
+}
+
+.state-poetry .poetry-screen {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+}
+
+.poetry-haze {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, oklch(0 0 0 / 0.72), transparent 30%, transparent 70%, oklch(0 0 0 / 0.72)),
+    radial-gradient(circle at 50% 50%, transparent, oklch(0 0 0 / 0.56) 76%);
+}
+
+.poetry-meta {
+  position: absolute;
+  top: 44px;
+  left: 54px;
+  right: 54px;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  color: oklch(1 0 0 / 0.55);
+  font-size: 14px;
+}
+
+.poetry-lines {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: 18px;
+  width: min(980px, 82vw);
+  color: oklch(1 0 0 / 0.94);
+  text-align: center;
+}
+
+.poetry-title {
+  margin: 0 0 22px;
+  color: oklch(1 0 0 / 0.58);
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-style: italic;
+}
+
+.poem-line {
+  margin: 0;
+  opacity: 0.08;
+  filter: blur(9px);
+}
+
+.state-poetry .poem-line {
+  animation: poemReveal 7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(0.45s + var(--line) * 1.22s);
+}
+
+.poem-line p {
+  margin: 0;
+}
+
+.poem-line p:first-child {
+  font-family: var(--font-display);
+  font-size: 50px;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+.poem-line p:last-child {
+  margin-top: 6px;
+  color: oklch(1 0 0 / 0.68);
+  font-size: 20px;
+}
+
+.again-button {
+  position: absolute;
+  right: 54px;
+  bottom: 44px;
+  z-index: 3;
+  min-width: 128px;
+  min-height: 44px;
+  padding: 0 20px;
+  border: 1px solid oklch(1 0 0 / 0.3);
+  background: oklch(1 0 0 / 0.1);
+  color: oklch(1 0 0 / 0.9);
+  backdrop-filter: blur(16px);
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.045);
+  }
+}
+
+@keyframes sceneDrift {
+  from {
+    transform: scale(1.04) translate3d(-1.2%, -0.8%, 0);
+  }
+
+  to {
+    transform: scale(1.1) translate3d(1.4%, 0.8%, 0);
+  }
+}
+
+@keyframes dawnLightShift {
+  from {
+    filter: saturate(1.04) contrast(1.03) brightness(1);
+  }
+
+  to {
+    filter: saturate(1.12) contrast(1.05) brightness(1.08);
+  }
+}
+
+@keyframes nightSkyPulse {
+  from {
+    filter: saturate(1.05) contrast(1.04) brightness(0.94);
+  }
+
+  to {
+    filter: saturate(1.16) contrast(1.08) brightness(1.05);
+  }
+}
+
+@keyframes sunBreath {
+  from {
+    transform: translate3d(-2%, 1%, 0) scale(0.96);
+    opacity: 0.54;
+  }
+
+  to {
+    transform: translate3d(1.6%, -1%, 0) scale(1.08);
+    opacity: 0.86;
+  }
+}
+
+@keyframes raySweep {
+  from {
+    filter: blur(24px);
+    opacity: 0.28;
+  }
+
+  to {
+    filter: blur(16px);
+    opacity: 0.62;
+  }
+}
+
+@keyframes dustGlow {
+  0%,
+  100% {
+    opacity: 0.26;
+    transform: scale(0.8);
+  }
+
+  50% {
+    opacity: 0.82;
+    transform: scale(1.22);
+  }
+}
+
+@keyframes starColorPulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 10px oklch(0.95 0.04 245 / 0.72),
+      0 0 22px oklch(0.65 0.15 235 / 0.18);
+  }
+
+  50% {
+    box-shadow:
+      0 0 18px oklch(1 0 0 / 0.94),
+      0 0 42px oklch(0.78 0.2 238 / 0.44);
+  }
+}
+
+@keyframes meteorFall {
+  0% {
+    opacity: 0;
+    transform: rotate(-28deg) translate3d(0, 0, 0) scaleX(0.28);
+  }
+
+  8% {
+    opacity: 1;
+  }
+
+  72% {
+    opacity: 0.9;
+  }
+
+  100% {
+    opacity: 0;
+    transform: rotate(-28deg) translate3d(-46vw, 28vh, 0) scaleX(1);
+  }
+}
+
+@keyframes cloudDrift {
+  from {
+    transform: translate3d(-18px, 0, 0);
+  }
+
+  to {
+    transform: translate3d(28px, -10px, 0);
+  }
+}
+
+@keyframes rotateLight {
+  to {
+    transform: rotate(344deg);
+  }
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    transform: scale(0.65);
+    opacity: 0.22;
+  }
+
+  50% {
+    transform: scale(1.35);
+    opacity: 1;
+  }
+}
+
+@keyframes floatParticle {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.28;
+  }
+
+  50% {
+    transform: translate3d(18px, -30px, 0);
+    opacity: 0.82;
+  }
+}
+
+@keyframes iconFall {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -80px, 0) rotate(var(--rotate)) scale(0.78);
+  }
+
+  12% {
+    opacity: 0.96;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--drift), 118vh, 0) rotate(calc(var(--rotate) + 230deg)) scale(1.08);
+  }
+}
+
+@keyframes poemReveal {
+  0% {
+    opacity: 0.06;
+    filter: blur(12px);
+    transform: translateY(22px);
+  }
+
+  45% {
+    opacity: 0.74;
+    filter: blur(2px);
+  }
+
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 1ms !important;
+  }
+
+  .poem-line {
+    opacity: 1;
+    filter: none;
+  }
+}
